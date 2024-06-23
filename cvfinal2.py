@@ -51,12 +51,12 @@ if __name__ == '__main__':
     num_epochs = 200
     criterion = torch.nn.CrossEntropyLoss()
 
-    base_params1 = [p for p in model1.parameters() if id(p) not in [id(param) for param in model1.classifier.parameters()]]
+    base_params1 = [p for p in model1.parameters() if id(p) not in [id(param) for param in model1.classifier[2].parameters()]]
     base_params2 = [p for p in model2.parameters() if id(p) not in [id(param) for param in model2.classifier.parameters()]]
 
     optimizer1 = torch.optim.Adam([
         {'params': base_params1},
-        {'params': model1.classifier.parameters(), 'lr': 5e-4}
+        {'params': model1.classifier[2].parameters(), 'lr': 5e-4}
     ], lr=1e-4)
 
     optimizer2 = torch.optim.Adam([
