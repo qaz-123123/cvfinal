@@ -109,7 +109,6 @@ def train(net, train_iter, test_iter, start, num_epochs, lr, device, threshold, 
             print("early stop")
             break
 
-    # torch.save(net.state_dict(), "./model_weights/{}-{}.pth".format(model_in_use, model_name))
     return history
 
 
