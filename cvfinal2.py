@@ -26,7 +26,9 @@ if __name__ == '__main__':
 
     transform = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+        torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)), 
+        torchvision.transforms.v2.CutMix(num_classes=10)
+    ])
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
