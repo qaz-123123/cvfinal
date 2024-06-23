@@ -39,7 +39,7 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model1 = torch.hub.load('pytorch/vision', 'convnext_tiny', pretrained=True)
-    model1.classifier = torch.nn.Linear(in_features=model1.classifier.in_features, out_features=10, bias=True)
+    model1.classifier[2] = torch.nn.Linear(in_features=model1.classifier.in_features, out_features=10, bias=True)
 
     processor = AutoImageProcessor.from_pretrained("swin_transformer")
     model2 = AutoModelForImageClassification.from_pretrained("swin_transformer")
