@@ -142,7 +142,7 @@ if __name__ == '__main__':
     new_resnet18 = resnet18[:-2]
     new_resnet18.add_module("new Adapt", torch.nn.AdaptiveAvgPool2d((1, 1)))
     new_resnet18.add_module("new Flatten", torch.nn.Flatten())
-    new_resnet18.add_module("new linear", torch.nn.Linear(512, num_classes))
+    new_resnet18.add_module("new linear", torch.nn.Linear(in_features=resnet18.fc.in_features, out_features=num_classes))
 
     lr = 1e-4
     train_iter, test_iter = SuperviseDataLoader(batch_size=batch_size, transform=transform)
