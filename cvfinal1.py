@@ -4,7 +4,6 @@ import torchvision
 
 
 class RotationDataset(torch.utils.data.Dataset):
-    # 数据加载器
     def __init__(self, is_train, transform):
         if is_train:
             dataset = torchvision.datasets.CIFAR10(root='data/', train=True, transform=transform, download=True)
@@ -116,7 +115,6 @@ def train(net, train_iter, test_iter, start, num_epochs, lr, device, threshold, 
 
 if __name__ == '__main__':
     batch_size = 32
-    in_channels = 3
     num_classes = 10
     num_rotation_epochs = 100
     num_supervise_epochs = 100
@@ -131,25 +129,24 @@ if __name__ == '__main__':
     is_freeze = False
     transform = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]], std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
+        torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
     ])
 
-    train_iter, test_iter = RotationDataLoader(batch_size=batch_size, transform=transform)  # 加载数据集
-    history = train(resnet18, train_iter, test_iter, 0, num_rotation_epochs, lr, device, threshold, save_checkpoint=True)  # 训练
+    train_iter, test_iter = RotationDataLoader(batch_size=batch_size, transform=transform)
+    history = train(resnet18, train_iter, test_iter, 0, num_rotation_epochs, lr, device, threshold, save_checkpoint=True)
 
     if is_freeze:
         for param in resnet18.parameters():
             param[1].requires_grad = False
 
-    # if model_in_use == 'resNet18':
     new_resnet18 = resnet18[:-2]
     new_resnet18.add_module("new Adapt", torch.nn.AdaptiveAvgPool2d((1, 1)))
     new_resnet18.add_module("new Flatten", torch.nn.Flatten())
     new_resnet18.add_module("new linear", torch.nn.Linear(512, num_classes))
 
     lr = 1e-4
-    train_iter, test_iter = SuperviseDataLoader(batch_size=batch_size, transform=transform)  # 加载数据集
-    history_1 = train(new_resnet18, train_iter, test_iter, num_rotation_epochs, num_rotation_epochs + num_supervise_epochs, lr, device, threshold, save_checkpoint=True)  # 训练
+    train_iter, test_iter = SuperviseDataLoader(batch_size=batch_size, transform=transform)
+    history_1 = train(new_resnet18, train_iter, test_iter, num_rotation_epochs, num_rotation_epochs + num_supervise_epochs, lr, device, threshold, save_checkpoint=True)
 
     for key in list(history.keys()):
         history[key] = history[key] + history_1[key]
