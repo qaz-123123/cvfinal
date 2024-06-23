@@ -1,7 +1,5 @@
 import torch
 import torchvision
-# from keras.src.ops import nn
-# import timm
 from transformers import AutoImageProcessor, AutoModelForImageClassification
 import matplotlib.pyplot as plt
 
